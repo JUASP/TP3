@@ -1,20 +1,105 @@
 /**
  * \file ReseauAerien.cpp
- * \brief Implémentattion de la classe ReseauAerien.
+ * \brief Implï¿½mentattion de la classe ReseauAerien.
  * \author ...
  * \version 0.1
  * \date ...
  *
- *  Travail pratique numéro 3
+ *  Travail pratique numï¿½ro 3
  *
  */
 
 #include "ReseauAerien.h"
-//vous pouvez inclure d'autres librairies si c'est nécessaire
+//vous pouvez inclure d'autres librairies si c'est nï¿½cessaire
 
 namespace TP3
 {
+/**
+ * \brief constructeur par dï¿½faut
+ * \post Un rï¿½seau aï¿½rien vide est instanciï¿½.
+ */
+ReseauAerien::ReseauAerien(){ //Le constructeur ne fait rien vu que le type ReseauAerien est composï¿½ d'un graphe.
+} //C'est le constructeur de ce dernier qui sera appelï¿½.
 
-	//À compléter par l'implémentation des méthodes demandées
 
+
+
+
+
+
+/**
+ * \brief Dï¿½truit et libï¿½re toute la mï¿½moire allouï¿½e auparavant pour le rï¿½seau aï¿½rien.
+ * \post Toute la mï¿½moire allouï¿½e auparavant pour le rï¿½seau aï¿½rien est libï¿½rï¿½e.
+ * \post L'Objet ReseauAerien n'est plus valide.
+ */
+ReseauAerien::~ReseauAerien(){
+   //viderReseau();
+} //Le destructeur ne fait rien, c'est celui du type Graphe qui sera appelï¿½ implicitement
+
+
+
+
+
+
+/**
+* \brief Constructeur de copie.
+* \pre Il y a assez de mï¿½moire.
+* \post la copie a Ã©tÃ© effectuer
+* \exception bad_alloc S'il n'y a pas assez de mï¿½moire.
+*/
+ReseauAerien::ReseauAerien(const ReseauAerien &source){
+   unReseau.operator =(source.unReseau); // Ici on utilise la surchage de l'operateur = de Graphe.
+   nomReseau = source.nomReseau; // simple affectation de string.
+}
+
+
+
+
+
+
+/**
+* \brief Surcharge de l'opï¿½rateur d'affectation.
+* \pre Il doit y avoir assez de mï¿½moire.
+* \param une rÃ©fÃ©rence sur un autre ReseauAerien
+* \post Le rï¿½seau aï¿½rien a un contenu identique ï¿½ src.
+* \return retourne l'objet ReseauAerien courant
+* \exception bad_alloc S'il n'y a pas assez de mï¿½moire.
+*/
+ReseauAerien& ReseauAerien::operator=(const ReseauAerien& src){
+   //viderReseau(); // on s'assure que le rÃ©seau est vide.
+
+   unReseau.operator =(src.unReseau); // Ici on utilise la surchage de l'operateur = de Graphe.
+   nomReseau = src.nomReseau; // simple affectation de string.
+
+   return (*this); // retourne l'objet courant
+}
+
+
+
+
+
+
+/**
+* \brief Vider le rï¿½seau
+* \post Le reseau est dï¿½truit
+*/
+void ReseauAerien::viderReseau(){
+   unReseau.detruireGraphe(); // on fais appelle au destructeur de unReseau
+   nomReseau.clear(); // on vide la string
+}
+
+
+
+
+
+/**
+*  \brief Retourne le pointeur sur le reseau.
+*
+*  \pre le reseau est valide.
+*
+*  \post Le reseau peut etre changï¿½e.
+*/
+Graphe * ReseauAerien::GetUnReseau (){
+   return &unReseau;
+}
 }//Fin du namespace

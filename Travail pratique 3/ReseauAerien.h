@@ -1,11 +1,11 @@
 /**
  * \file ReseauAerien.h
- * \brief Gestion d'un réseau aérien.
+ * \brief Gestion d'un rï¿½seau aï¿½rien.
  * \author ...
  * \version 0.1
  * \date ...
  *
- *  Travail pratique numéro 3
+ *  Travail pratique numï¿½ro 3
  *
  */
 
@@ -23,19 +23,19 @@
 namespace TP3
 {
 
-const int infinie = INT_MAX; // Constante que vous pouvez éventuellement utiliser
+const int infinie = INT_MAX; // Constante que vous pouvez ï¿½ventuellement utiliser
 
 struct Chemin 
 {
    //listeVilles doit contenir la liste des villes formant le chemin
-   //Le point de départ du chemin correspond à l'élément d'indice 0 du vecteur
-   //le point d'arrivée correspond au dernier élément du vecteur.
+   //Le point de dï¿½part du chemin correspond ï¿½ l'ï¿½lï¿½ment d'indice 0 du vecteur
+   //le point d'arrivï¿½e correspond au dernier ï¿½lï¿½ment du vecteur.
    std::vector<std::string> listeVilles;
 
-   float dureeTotale;		// Durée totale du vol du chemin en heures incluant le temps d'escale
-   float coutTotal;			// Cout total en dollars du chemin entre la ville de départ et la ville de destination
-   int nsTotal;				// Niveau de sécurité total du chemin
-   bool reussi;				// Un booléen qui vaut true si chemin a été trouvé, false sinon
+   float dureeTotale;		// Durï¿½e totale du vol du chemin en heures incluant le temps d'escale
+   float coutTotal;			// Cout total en dollars du chemin entre la ville de dï¿½part et la ville de destination
+   int nsTotal;				// Niveau de sï¿½curitï¿½ total du chemin
+   bool reussi;				// Un boolï¿½en qui vaut true si chemin a ï¿½tï¿½ trouvï¿½, false sinon
 };
 
 class ReseauAerien{
@@ -43,100 +43,112 @@ class ReseauAerien{
 public:
 
 	/**                       
-	 * \brief constructeur par défaut
-	 * \post Un réseau aérien vide est instancié.
+	 * \brief constructeur par dï¿½faut
+	 * \post Un rï¿½seau aï¿½rien vide est instanciï¿½.
 	 */
-	ReseauAerien(){}  //Le constructeur ne fait rien vu que le type ReseauAerien est composé d'un graphe. 
-				   //C'est le constructeur de ce dernier qui sera appelé.
+	ReseauAerien();  //Le constructeur ne fait rien vu que le type ReseauAerien est composï¿½ d'un graphe.
+				   //C'est le constructeur de ce dernier qui sera appelï¿½.
 
 	/**                       
-	 * \brief Détruit et libère toute la mémoire allouée auparavant pour le réseau aérien.
-	 * \post Toute la mémoire allouée auparavant pour le réseau aérien est libérée.
+	 * \brief Dï¿½truit et libï¿½re toute la mï¿½moire allouï¿½e auparavant pour le rï¿½seau aï¿½rien.
+	 * \post Toute la mï¿½moire allouï¿½e auparavant pour le rï¿½seau aï¿½rien est libï¿½rï¿½e.
 	 * \post L'Objet ReseauAerien n'est plus valide.
 	 */
-	~ReseauAerien(){}; //Le destructeur ne fait rien, c'est celui du type Graphe qui sera appelé implicitement
+	~ReseauAerien(); //Le destructeur ne fait rien, c'est celui du type Graphe qui sera appelï¿½ implicitement
 
 	/**
 	* \brief Constructeur de copie.
-	* \pre Il y a assez de mémoire.
-	* \exception bad_alloc S'il n'y a pas assez de mémoire.
+	* \pre Il y a assez de mï¿½moire.
+	* \exception bad_alloc S'il n'y a pas assez de mï¿½moire.
 	*/
 	ReseauAerien(const ReseauAerien &source);
         
     /**
-	* \brief Surcharge de l'opérateur d'affectation.
-	* \pre Il doit y avoir assez de mémoire.
-	* \post Le réseau aérien a un contenu identique à src.
-	* \exception bad_alloc S'il n'y a pas assez de mémoire.
+	* \brief Surcharge de l'opï¿½rateur d'affectation.
+	* \pre Il doit y avoir assez de mï¿½moire.
+	* \post Le rï¿½seau aï¿½rien a un contenu identique ï¿½ src.
+	* \exception bad_alloc S'il n'y a pas assez de mï¿½moire.
 	*/
 	ReseauAerien& operator=(const ReseauAerien& src);
 
 	/**
-	* \brief Surcharge de l'opérateur de sortie.
-	* \post Le reseau aérien sera affiché  
+	* \brief Surcharge de l'opï¿½rateur de sortie.
+	* \post Le reseau aï¿½rien sera affichï¿½  
 	*/
-	friend std::ostream& operator<<(std::ostream& out, const ReseauAerien& g);
+	friend std::ostream& operator<<(std::ostream& out, const ReseauAerien& g){
+	   out << "Voici donc les informations du rÃ©seau aerien: " << g.nomReseau << std::endl;
+	   out << g.unReseau;
+	   return out;
+	}
 
 	/**                       
-	 * \brief Charger un réseau à partir d'un fichier texte en entrée (voir format du fichier dans l'énoncé du Tp).
-	 *  Construit un reseau aérien à partir d'une liste de villes ainsi que leurs liens.
-	 * \pre Il y a assez de mémoire pour charger toutes les villes et les trajets du réseau.
+	 * \brief Charger un rï¿½seau ï¿½ partir d'un fichier texte en entrï¿½e (voir format du fichier dans l'ï¿½noncï¿½ du Tp).
+	 *  Construit un reseau aï¿½rien ï¿½ partir d'une liste de villes ainsi que leurs liens.
+	 * \pre Il y a assez de mï¿½moire pour charger toutes les villes et les trajets du rï¿½seau.
 	 * \pre fichierEntree est ouvert corectement. 
-	 * \post fichierEntree n'est pas fermé par la fonction.
-	 * \post Si les préconditions sont respectées, les données du réseau contenu 
-	 *       dans le fichier en entrée sont organisées dans un graphe en mémoire. 
-	 * \exception bad_alloc si pas assez de mémoire pour contenir toute la liste du fichier.
+	 * \post fichierEntree n'est pas fermï¿½ par la fonction.
+	 * \post Si les prï¿½conditions sont respectï¿½es, les donnï¿½es du rï¿½seau contenu 
+	 *       dans le fichier en entrï¿½e sont organisï¿½es dans un graphe en mï¿½moire. 
+	 * \exception bad_alloc si pas assez de mï¿½moire pour contenir toute la liste du fichier.
 	 * \exception logic_error si fichierEntree n'est pas ouvert correctement. 
 	 */
 	void chargerReseau(std::ifstream & fichierEntree); 
 
 	/**                       
-	 * \brief Sauvegarder un réseau dans un fichier texte (voir format du fichier dans l'énoncé du Tp).
+	 * \brief Sauvegarder un rï¿½seau dans un fichier texte (voir format du fichier dans l'ï¿½noncï¿½ du Tp).
 	 * \pre SortieFichier est ouvert correctement. 
-	 * \post SortieFichier n'est pas fermé par la fonction.
-	 * \post Si les préconditions sont respectées, les données du réseau sont sauvegardées dans le fichier. 
+	 * \post SortieFichier n'est pas fermï¿½ par la fonction.
+	 * \post Si les prï¿½conditions sont respectï¿½es, les donnï¿½es du rï¿½seau sont sauvegardï¿½es dans le fichier. 
 	 * \exception logic_error si SortieFichier n'est pas ouvert correctement. 
 	 */
 	void sauvegarderReseau(std::ofstream & SortieFichier) const;
 
 	/**
-	* \brief Vider le réseau
-	* \post Le reseau est détruit
+	* \brief Vider le rï¿½seau
+	* \post Le reseau est dï¿½truit
 	*/
 	void viderReseau();
 
 	/**
-	* \brief Déterminer la fermeture transitive du reseau.
-	* \pre Le reseau est correctement initialisé.
-	* \post La fermeture transitive du reseau est retournée. 
-	* \post Le reseau original reste inchangé.
-	* \exception bad_alloc si pas assez de mémoire
+	* \brief Dï¿½terminer la fermeture transitive du reseau.
+	* \pre Le reseau est correctement initialisï¿½.
+	* \post La fermeture transitive du reseau est retournï¿½e. 
+	* \post Le reseau original reste inchangï¿½.
+	* \exception bad_alloc si pas assez de mï¿½moire
 	*/
 	ReseauAerien fermetureReseau();
 
 	/**
-	* \brief Déterminer les composantes fortement connexes d’un réseau.
+	* \brief Dï¿½terminer les composantes fortement connexes dï¿½un rï¿½seau.
 	*  Cette fonction retourne un tableau (vector) 
-	*  Chaque élément du tableau retourné contiendra un sous-réseau dont toutes
-	*  les villes appartiennent à la même composante fortement connexe. 
-	* \pre Le reseau est correctement initialisé.
-	* \post Le tableau des sous-reseaux est retourné. 
-	* \post Le reseau original reste inchangé.
-	* \exception bad_alloc si pas assez de mémoire pour créer le tableau
+	*  Chaque ï¿½lï¿½ment du tableau retournï¿½ contiendra un sous-rï¿½seau dont toutes
+	*  les villes appartiennent ï¿½ la mï¿½me composante fortement connexe. 
+	* \pre Le reseau est correctement initialisï¿½.
+	* \post Le tableau des sous-reseaux est retournï¿½. 
+	* \post Le reseau original reste inchangï¿½.
+	* \exception bad_alloc si pas assez de mï¿½moire pour crï¿½er le tableau
 	*/
 	std::vector<ReseauAerien> composantesFortConnexes();
 
+	/**
+	*  \brief Retourne le pointeur sur le reseau.
+	*
+	*  \pre le reseau est valide.
+	*
+	*  \post Le reseau peut etre changï¿½e.
+	*/
+	Graphe * GetUnReseau ();
 
-// De plus, vous devez compléter ce fichier ReseauAerien.h par la spécification 
-// du reste des méthodes demandés, voir l'énoncé de ce travail pratique (4.3 Requêtes des clients)
+// De plus, vous devez complï¿½ter ce fichier ReseauAerien.h par la spï¿½cification 
+// du reste des mï¿½thodes demandï¿½s, voir l'ï¿½noncï¿½ de ce travail pratique (4.3 Requï¿½tes des clients)
 
 private:
-	Graphe unReseau;			//Le type ReseauAerien est composé d'un graphe
+	Graphe unReseau;			//Le type ReseauAerien est composï¿½ d'un graphe
 	std::string nomReseau;		// Le nom du reseau (exemple: Air Canada)
 
-	// Vous pouvez définir des constantes ici.
+	// Vous pouvez dï¿½finir des constantes ici.
 
-	// Déclaration éventuelles de méthodes privées. À vous de voir! 
+	// Dï¿½claration ï¿½ventuelles de mï¿½thodes privï¿½es. ï¿½ vous de voir! 
 
 };
 

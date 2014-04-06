@@ -19,6 +19,8 @@ int main()
 	graph.enleverArc("un", "deux");
 	graph.ajouterArc("un", "deux", 2.00, 200.00, 4);
 	graph.ajouterArc("un", "trois", 2.00, 200.00, 4);
+	std::cout << "operator << ";
+	std::cout << graph;
 	Graphe graph2;
 	graph2 = graph;
 	if (graph2.arcExiste("un", "deux")) std::cout << "arc existe" << std::endl;
@@ -30,5 +32,6 @@ int main()
 	//std::cout << graph.getNomSommet(3.20, 4.20) << std::endl;
 	Coordonnees coord = graph.getCoordonnesSommet("un");
 	std::cout << coord.lg << ' ' << coord.lt << std::endl;
+
 	return 0;
 }

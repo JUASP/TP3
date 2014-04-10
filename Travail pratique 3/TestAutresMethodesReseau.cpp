@@ -26,6 +26,9 @@ int main()
    ReseauAerien reseau2;
    ReseauAerien reseau3(reseau2); // test constructeur de copie
    reseau2 = reseau; // test de la surchage de l'operateur =
+   std::cout << reseau2;
+   ReseauAerien reseauFermer = reseau.fermetureReseau(); // cree la fermeture du reseau
+   std::cout << reseauFermer;
 	if (reseau2.GetUnReseau()->arcExiste("un", "deux")) std::cout << "arc existe" << std::endl;
 	if (reseau.GetUnReseau()->arcExiste("un", "deux")) std::cout << "arc existe" << std::endl;
 	std::vector<std::string> sommets = reseau.GetUnReseau()->listerSommetsAdjacents("un");

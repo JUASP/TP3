@@ -132,6 +132,42 @@ std::vector<ReseauAerien> ReseauAerien::composantesFortConnexes(){
 
 
 
+
+/**
+* \brief D�terminer la fermeture transitive du reseau.
+* \pre Le reseau est correctement initialis�.
+* \post La fermeture transitive du reseau est retourn�e.
+* \post Le reseau original reste inchang�.
+* \exception bad_alloc si pas assez de m�moire
+*/
+ReseauAerien ReseauAerien::fermetureReseau(){
+   ReseauAerien reseauFermeture((*this)); // reseauFermeture correspond a un nouveau reseau qui utilie le constructeur de copie pour mettre ses valeurs par defaut.
+   std::vector<std::string> vectorNomsSommets = unReseau.listerNomsSommets();
+   Ponderations ponde1;
+   Ponderations ponde2;
+   for (unsigned int i = 0; i < vectorNomsSommets.size(); i++) {
+         for (unsigned int j = 0; j < vectorNomsSommets.size(); j++) {
+            for (unsigned int k = 0; k < vectorNomsSommets.size(); k++) {
+               if (!reseauFermeture.unReseau.arcExiste(vectorNomsSommets[j], vectorNomsSommets[k])
+                     && reseauFermeture.unReseau.arcExiste(vectorNomsSommets[j], vectorNomsSommets[i])
+                     && reseauFermeture.unReseau.arcExiste(vectorNomsSommets[i], vectorNomsSommets[k]))
+               {
+                  // on obtient la ponderation de l'Arc entre le vecteur J et I
+                  ponde1 = reseauFermeture.unReseau.getPonderationsArc(vectorNomsSommets[j], vectorNomsSommets[i]);
+                  // on obtient la ponderation de l'Arc entre le vecteur i et K
+                  ponde2 = reseauFermeture.unReseau.getPonderationsArc(vectorNomsSommets[i], vectorNomsSommets[k]);
+                  // on ajoute un arc entre J  K ayant la ponderation de ponde 1 + ponde 2.
+                  reseauFermeture.unReseau.ajouterArc(vectorNomsSommets[j], vectorNomsSommets[k],(ponde1.duree + ponde2.duree),(ponde1.cout + ponde2.cout),(ponde1.ns + ponde2.ns)) ;
+               }// fin if
+            }
+         }
+      }
+
+   return reseauFermeture;
+}
+
+
+
 /**
 * \fn Chemin bellManFord(const std::string& origine,const std::string& destination, int dureeCoutNiveau)
 *  \brief Retourne le pointeur sur le reseau.
@@ -159,10 +195,10 @@ Chemin ReseauAerien::bellManFord(const std::string& origine,const std::string& d
    switch(dureeCoutNiveau)
          {
            case 1: // cas pour durée de vol comme pondération
-                   cheminLePlusCourt = rechercheCheminDijkstra(origine,destination, true);
+                   //cheminLePlusCourt = rechercheCheminDijkstra(origine,destination, true);
                    break;
            case 2: // cas pour cout du vol comme pondération
-                   cheminLePlusCourt = rechercheCheminDijkstra(origine,destination, false);
+                   //cheminLePlusCourt = rechercheCheminDijkstra(origine,destination, false);
                    break;
            case 3: // cas pour niveau de sécurite comme pondération
 

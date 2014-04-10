@@ -15,6 +15,7 @@
 #include <stdexcept>
 #include <climits>
 #include <vector>
+#include <map>
 //vous pouvez inclure d'autres librairies de la STL si vous pensez les utiliser
 
 #ifndef _RESEAUAERIEN__H
@@ -138,6 +139,26 @@ public:
 	*  \post Le reseau peut etre chang�e.
 	*/
 	Graphe * GetUnReseau ();
+
+
+
+   /**
+   * \fn Chemin bellManFord(const std::string& origine,const std::string& destination, int dureeCoutNiveau)
+   *  \brief Retourne le pointeur sur le reseau.
+   *
+   *  \pre le reseau est valide.
+   *  \pre les param d'entree sont dans l'ensemble des noeuds du reseau
+   *  \pre dureeCoutNiveau = 1 ou 2 ou 3
+   *  \param origine est une variable string qui correspond a la ville d'origine
+   *  \param destination est une variable string qui correspond a la ville de la destination
+   *  \param dureeCoutNiveau est le type de pondération que nous allons utiliser
+   *
+   *  \return un element de type Chemin
+   *  \post retourne le chemin le plus court.
+   *  \exception logic_error si les villes ne font pas parti du reseau aerien
+   *  \exception logic_error si la valeur de dureeCoutNiveau != 1..3
+   */
+	Chemin bellManFord(const std::string& origine,const std::string& destination, int dureeCoutNiveau);
 
 // De plus, vous devez compl�ter ce fichier ReseauAerien.h par la sp�cification 
 // du reste des m�thodes demand�s, voir l'�nonc� de ce travail pratique (4.3 Requ�tes des clients)

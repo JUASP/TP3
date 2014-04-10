@@ -400,6 +400,36 @@ int Graphe::nombreSommets() const
 	return nbSommets;
 }
 
+
+
+/**
+* \brief Retourne le nombre d'arc dans la liste des sommets
+* \post Le graphe reste inchangé.
+*/
+int Graphe::nombreArcs() const
+{
+   return nbArcs;
+}
+
+/**
+* \fn  Graphe::Sommet*  Graphe::_sommetAssocierAuNom(const std::string& nom)
+* \brief retourne un pointeur vers le sommet correspondant au nom recu en param
+* \return un pointeur vers le sommet qui correspond au nom recu en param
+* \post Le graphe reste inchangé.
+*/
+Graphe::Sommet*  Graphe::_sommetAssocierAuNom(const std::string& nom)
+{
+   Sommet* courant = listeSommets;
+   for (int j = 0; j < nbSommets; j++)
+   {
+      if(nom == courant->nom){
+         return courant; // on donne la valeur en refence de courant a source
+      }
+      courant = courant->suivant;
+   }
+   return 0;
+}
+
 bool Graphe::estVide() const
 {
 	return nbSommets == 0;

@@ -160,6 +160,14 @@ namespace TP3
        */
         int nombreSommets() const;
         
+        /**
+            * \brief Retourne le nombre d'arc dans la liste des sommets
+           * \post Le graphe reste inchangé.
+            */
+       int nombreArcs() const;
+
+
+
        /**
        * \brief Indique si la liste des sommets est vide
 	   * \post Le graphe reste inchangé
@@ -221,6 +229,8 @@ namespace TP3
         */
 		void detruireGraphe();
 
+
+
 		//Vous pouvez ajoutez d'autres méthodes publiques si vous sentez leur nécessité
 
         
@@ -249,9 +259,9 @@ namespace TP3
 		int nbSommets;					// Le nombre de sommets dans le graphe
 		int nbArcs;						// Le nombre des arcs dans le graphe
 		Sommet * listeSommets;			// Liste des sommets du graphe
-        
+
 		//Vous pouvez ajoutez d'autres méthodes privées si vous sentez leur nécessité
-       
+		Sommet *  _sommetAssocierAuNom(const std::string& nom);
 	};
 
 }//Fin du namespace

@@ -195,10 +195,10 @@ Chemin ReseauAerien::bellManFord(const std::string& origine,const std::string& d
    switch(dureeCoutNiveau)
          {
            case 1: // cas pour durée de vol comme pondération
-                   //cheminLePlusCourt = rechercheCheminDijkstra(origine,destination, true);
+                   cheminLePlusCourt = rechercheCheminDijkstra(origine,destination, true);
                    break;
            case 2: // cas pour cout du vol comme pondération
-                   //cheminLePlusCourt = rechercheCheminDijkstra(origine,destination, false);
+                   cheminLePlusCourt = rechercheCheminDijkstra(origine,destination, false);
                    break;
            case 3: // cas pour niveau de sécurite comme pondération
 
@@ -218,17 +218,15 @@ Chemin ReseauAerien::bellManFord(const std::string& origine,const std::string& d
                    pondeCumule[indexOrigine] = 0; //le sommet d'origine qui aura la valeur de 0
                    ----------------*/
 
-                   for(std::vector<std::string>::iterator it = vecteurNomsSommets.begin(); it <= vecteurNomsSommets.end(); it++){
+                   for(std::vector<std::string>::iterator it = vecteurNomsSommets.begin(); it < vecteurNomsSommets.end(); it++){
 
                       if((*it) == origine){
                           mapNomsPoids[(*it)] = 0; // on donne 0 a la source
                           mapPrecedent[(*it)] = ""; // la source n'as pas de sommet precedent
                           continue;
                        }
-
                        mapNomsPoids[(*it)] = INT_MAX; // on doit INT_MAX a tous les sommets
                    }
-
 
                    // Étape 2 on relache tous les arcs (nombredesommet - 1 fois)
                    int k; // utile pour la boucle qui s'assure de boucler une nombreSommets() fois
@@ -239,20 +237,34 @@ Chemin ReseauAerien::bellManFord(const std::string& origine,const std::string& d
                    std::string villeAdjacenteCourante; // string villeAdjCourante pour y deposer notre iterateur courant
                    std::vector<std::string> vectorSommetsAdjacents; // on declare le vecteur de somnmets a l'exterieur des boucles.
                   // Sommet *  _sommetAssocierAuNom(const std::string& nom);
+
                    for (k = 0; k <= unReseau.nombreSommets() ; k++) // on fais la boucle (nombreSommet() - 1) fois
                     {
                       for(itVille = vecteurNomsSommets.begin(); itVille < vecteurNomsSommets.end() ; itVille++ ){ // on parcours tout les sommets
                         villeCourante = (*itVille);
                         vectorSommetsAdjacents = unReseau.listerSommetsAdjacents(villeCourante);
 
+                        //std::cout << "ville courante: " <<villeCourante << std::endl;
+
                         for (itVilleAdj = vectorSommetsAdjacents.begin(); itVilleAdj < vectorSommetsAdjacents.end() ; itVilleAdj++ )
                         {
                            villeAdjacenteCourante = (*itVilleAdj);
+                           //std::cout << "ville courante ( for): " <<villeCourante << std::endl;
+                           //std::cout << "ville courante adjacente: " << villeAdjacenteCourante << std::endl;
+                           if(unReseau.arcExiste(villeCourante,villeAdjacenteCourante)){
                            ponde = unReseau.getPonderationsArc(villeCourante, villeAdjacenteCourante); // on remplis l'objet ponde avec la ponderation entre les deux sommets
-
+                           }
+                           else continue;
+                           //std::cout << "ponderation de l'arc: " << ponde.ns << std::endl;
                            if(mapNomsPoids[villeCourante] + ponde.ns < mapNomsPoids[villeAdjacenteCourante]){
+                              //std::cout << "a l'interieur valeur map Poids: " << mapNomsPoids[villeCourante]<< " pour: " << villeCourante << std::endl;
+                              //std::cout << "poids avant changement pour adjacente: " << mapNomsPoids[villeAdjacenteCourante]<< " pour: " << villeAdjacenteCourante << std::endl;
                               mapNomsPoids[villeAdjacenteCourante] = mapNomsPoids[villeCourante] + ponde.ns;
+                              //std::cout << "poids apres changement pour adjacente: " << mapNomsPoids[villeAdjacenteCourante]<< " pour: " << villeAdjacenteCourante << std::endl;
+
+                              //std::cout << "precendent avant changement pour adjacente: " << mapPrecedent[villeAdjacenteCourante]<< " pour: " << villeAdjacenteCourante << std::endl;
                               mapPrecedent[villeAdjacenteCourante] = villeCourante; // on associe villeCourante comme precedent des Vecteurs adjacents
+                              //std::cout << "precendent apres changement pour adjacente: " << mapPrecedent[villeAdjacenteCourante]<< " pour: " << villeAdjacenteCourante << std::endl;
                            }// fin if
 
                         }// fin for des villes adjacentes
@@ -265,7 +277,9 @@ Chemin ReseauAerien::bellManFord(const std::string& origine,const std::string& d
                       vectorSommetsAdjacents = unReseau.listerSommetsAdjacents(villeCourante);
                       for (itVilleAdj = vectorSommetsAdjacents.begin(); itVilleAdj < vectorSommetsAdjacents.end() ; itVilleAdj++ ){
                          villeAdjacenteCourante = (*itVilleAdj);
+                         if(unReseau.arcExiste(villeCourante,villeAdjacenteCourante)){
                          ponde = unReseau.getPonderationsArc(villeCourante, villeAdjacenteCourante); // on remplis l'objet ponde avec la ponderation entre les deux sommets
+                         }else continue;
                          if (mapNomsPoids[villeAdjacenteCourante] > mapNomsPoids[villeCourante] + ponde.ns){
                                  cheminLePlusCourt.reussi = false;
                                  return cheminLePlusCourt;
@@ -274,9 +288,13 @@ Chemin ReseauAerien::bellManFord(const std::string& origine,const std::string& d
                    }// fin for qui parcours tous les sommets
                    cheminLePlusCourt.reussi = true;
                    cheminLePlusCourt.nsTotal = mapNomsPoids[destination];
+                   cheminLePlusCourt.listeVilles.push_back(destination); // on ajoute notre destination a la liste
+                   //std::cout <<"valeur destination out: " << destination <<std::endl;
                    std::string courant = mapPrecedent[destination];
-                   cheminLePlusCourt.listeVilles.push_back(courant);
+                   cheminLePlusCourt.listeVilles.push_back(courant);// on ajoute son precedent
+                   //std::cout <<"valeur courant out: " << courant <<std::endl;
                    while(courant != origine){ // parcours de la destionation jusqu'a l'origine avec les precedents
+                      //std::cout <<"valeur courant in : " << courant <<std::endl;
                       courant = mapPrecedent[courant];
                       cheminLePlusCourt.listeVilles.push_back(courant); // on append le vecteur avec le sommet courant
                    }

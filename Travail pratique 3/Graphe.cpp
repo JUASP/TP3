@@ -14,13 +14,19 @@
 
 namespace TP3
 {
+/*
+ * \fn Graphe::Graphe()
+ */
 Graphe::Graphe()
 {
 	nbSommets = 0;
 	nbArcs = 0;
 	listeSommets = 0;
 }
-
+/*
+ * \fn Graphe::Graphe(const Graphe &source)
+ * \param[in] source un graphe à copier
+ */
 Graphe::Graphe(const Graphe &source)
 {
 	nbSommets = source.nbSommets;
@@ -46,12 +52,18 @@ Graphe::Graphe(const Graphe &source)
 	}
 
 }
-
+/*
+ * \fn Graphe::~Graphe()
+ */
 Graphe::~Graphe()
 {
 	detruireGraphe();
 }
-
+/*
+ * \fn Graphe& Graphe::operator=(const Graphe& src)
+ * \param[in] src un graphe à copier
+ * \return Le graphe contient les infos du graphe src
+ */
 Graphe& Graphe::operator=(const Graphe& src)
 {
 	detruireGraphe();
@@ -79,7 +91,12 @@ Graphe& Graphe::operator=(const Graphe& src)
 		}
 	return (*this);
 }
-
+/*
+ * \fn bool Graphe::arcExiste(const std::string& sommetUn, const std::string& sommetDeux) const
+ * \param[in] sommetUn le premier sommet de l'arc
+ * \param[in] sommetDeux le deuxieme sommet de l'arc
+ * \return bool indiquant si l'arc existe
+ */
 bool Graphe::arcExiste(const std::string& sommetUn, const std::string& sommetDeux) const
 {
 	if (!(sommetExiste(sommetUn) && sommetExiste(sommetDeux))) throw std::logic_error("arcExiste: Un ou plusieurs somments manquants");
@@ -103,7 +120,11 @@ bool Graphe::arcExiste(const std::string& sommetUn, const std::string& sommetDeu
 	}
 	return false;
 }
-
+/*
+ * \fn void Graphe::enleverArc(const std::string& nom1, const std::string& nom2)
+ * \param[in] nom1 le nom du premier sommet de l'arc
+ * \param[in] nom2 le nom du deuxieme sommet de l'arc
+ */
 void Graphe::enleverArc(const std::string& nom1, const std::string& nom2)
 {
 	if (!(arcExiste(nom1, nom2))) throw std::logic_error("enleverArc: L'arc n'existe pas.");
@@ -185,7 +206,14 @@ void Graphe::enleverArc(const std::string& nom1, const std::string& nom2)
 	delete aSupprimer;
 	nbArcs--;
 }
-
+/*
+ * \fn void Graphe::ajouterArc(const std::string& nom1, const std::string& nom2, float duree, float cout, int ns)
+ * \param[in] nom1 le nom du premier sommet de l'arc
+ * \param[in] nom2 le nom u deuxieme sommet de l'arc
+ * \param[in] duree la duree de l'arc
+ * \param[in] cout le cout de l'arc
+ * \param[in] ns le niveau de securite de l'arc
+ */
 void Graphe::ajouterArc(const std::string& nom1, const std::string& nom2, float duree, float cout, int ns)
 {
 	if (!(sommetExiste(nom1) && sommetExiste(nom2))) throw std::logic_error("ajouterArc: Un ou plusieurs somments manquants");
@@ -247,7 +275,12 @@ void Graphe::ajouterArc(const std::string& nom1, const std::string& nom2, float 
 	}
 	nbArcs++;
 }
-
+/*
+ * \fn void Graphe::ajouterSommet(const std::string& nom, float lt, float lg)
+ * \param[in] nom le nom du sommet à ajouter
+ * \param[in] lt la latitude du sommet
+ * \param[in] lg la longitude du sommet
+ */
 void Graphe::ajouterSommet(const std::string& nom, float lt, float lg)
 {
 	if(sommetExiste(nom)) throw std::logic_error("AjouterSommet: le sommet existe deja!\n");
@@ -277,7 +310,11 @@ void Graphe::ajouterSommet(const std::string& nom, float lt, float lg)
 
 	nbSommets++;
 }
-
+/*
+ * \fn bool Graphe::sommetExiste(const std::string& nom) const
+ * \param[in] nom le nom du sommet à valider
+ * \return bool un booléen représentant la présence du sommet
+ */
 bool Graphe::sommetExiste(const std::string& nom) const
 {
 	if (nbSommets == 0) return false;
@@ -289,7 +326,10 @@ bool Graphe::sommetExiste(const std::string& nom) const
 	}
 	return false;
 }
-
+/*
+ * \fn void Graphe::enleverSommet(const std::string& nom)
+ * \param[in] nom le nom du sommet à enlever
+ */
 void Graphe::enleverSommet(const std::string& nom)
 {
 	if (!sommetExiste(nom)) throw std::logic_error("Le sommet n'existe pas");
@@ -359,7 +399,10 @@ void Graphe::enleverSommet(const std::string& nom)
 		}
 	}
 }
-
+/*
+ * \fn std::vector<std::string> Graphe::listerNomsSommets() const
+ * \return un vector de string contenant tous les noms des sommets
+ */
 std::vector<std::string> Graphe::listerNomsSommets() const
 {
 	if (nbSommets == 0) throw std::logic_error("Aucun sommet présent dans le réseau");
@@ -373,7 +416,11 @@ std::vector<std::string> Graphe::listerNomsSommets() const
 	}
 	return sommets;
 }
-
+/*
+ * \fn std::vector<std::string> Graphe::listerSommetsAdjacents(const std::string& nom) const
+ * \param[in] nom le nom du sommet duquel on veut trouver les sommets adjacents
+ * \return un vector de string contenant tous les noms des sommets adjacents à nom
+ */
 std::vector<std::string> Graphe::listerSommetsAdjacents(const std::string& nom) const
 {
 	if (!(sommetExiste(nom))) throw std::logic_error("listerSommetsAdjacents: Le sommet n'existe pas");
@@ -396,7 +443,10 @@ std::vector<std::string> Graphe::listerSommetsAdjacents(const std::string& nom) 
 	}
 	return sommets;
 }
-
+/*
+ * \fn int Graphe::nombreSommets() const
+ * \return int le nombre de sommets du graphe
+ */
 int Graphe::nombreSommets() const
 {
 	return nbSommets;
@@ -405,6 +455,7 @@ int Graphe::nombreSommets() const
 
 
 /**
+* \fn  int Graphe::nombreArcs() const
 * \brief Retourne le nombre d'arc dans la liste des sommets
 * \post Le graphe reste inchangé.
 */
@@ -432,11 +483,21 @@ Graphe::Sommet*  Graphe::_sommetAssocierAuNom(const std::string& nom)
    return 0;
 }
 
+/*
+ * \fn bool Graphe::estVide() const
+ * \return true si le graphe est vide, false sinon
+ */
 bool Graphe::estVide() const
 {
 	return nbSommets == 0;
 }
 
+/*
+ * \fn Ponderations Graphe::getPonderationsArc(const std::string& sommetUn, const std::string& sommetDeux) const
+ * \param[in] sommetUn le premier sommet de l'arc
+ * \param[in] somemtDeux le deuxieme sommet de l'arc
+ * \return la ponderation de l'arc
+ */
 Ponderations Graphe::getPonderationsArc(const std::string& sommetUn, const std::string& sommetDeux) const
 {
 	if (!(arcExiste(sommetUn, sommetDeux))) throw std::logic_error("getPonderationsArc: L'arc n'existe pas");
@@ -449,6 +510,12 @@ Ponderations Graphe::getPonderationsArc(const std::string& sommetUn, const std::
 	return arcCourant->ponder;
 }
 
+/*
+ * \fn std::string Graphe::getNomSommet(float lt, float lg) const
+ * \param[in] lt un float représentant la latitude du sommet
+ * \param[in] un float représentant la longitude du sommet
+ * \return le nom du sommet
+ */
 std::string Graphe::getNomSommet(float lt, float lg) const
 {
 	Sommet* courant = listeSommets;
@@ -461,6 +528,11 @@ std::string Graphe::getNomSommet(float lt, float lg) const
 	throw std::logic_error("getNomSommet: Les coordonnees ne representent aucun sommet");
 }
 
+/*
+ * \fn Coordonnees Graphe::getCoordonnesSommet(const std::string& nom) const
+ * \param[in] nom le nom du sommet à trouver
+ * \return les coordonnees du sommet trouvé
+ */
 Coordonnees Graphe::getCoordonnesSommet(const std::string& nom) const
 {
 	if (estVide()) throw std::logic_error("getCoordonneesSommet: Il n'y a aucun sommet dans le graphe");
@@ -471,6 +543,12 @@ Coordonnees Graphe::getCoordonnesSommet(const std::string& nom) const
 	return courant->coord;
 }
 
+/*
+ * \fn float Graphe::getDistanceEucledienne(const std::string& sommetUn, const std::string& sommetDeux) const
+ * \param[in] sommetUn le premier sommet
+ * \param[in] sommetDeux le deuxieme sommet
+ * \return la distance en float entre les deux sommets
+ */
 float Graphe::getDistanceEucledienne(const std::string& sommetUn, const std::string& sommetDeux) const
 {
 	if (!(sommetExiste(sommetUn)) && !(sommetExiste(sommetDeux))) throw std::logic_error("getDistanceEucledienne: un ou plusieurs sommets n'existent pas");
@@ -488,6 +566,9 @@ float Graphe::getDistanceEucledienne(const std::string& sommetUn, const std::str
 	return distance;
 }
 
+/*
+ * \fn void Graphe::detruireGraphe()
+ */
 void Graphe::detruireGraphe()
 {
 	Sommet* courant = listeSommets;
@@ -506,4 +587,102 @@ void Graphe::detruireGraphe()
 	delete listeSommets;
 }
 
+
+
+
+
+//NEW
+/*
+ * \fn  int getNbSommets()
+ * \brief retourne le nombre de sommets d'un graphe
+ *
+ * \return un int représentant lenombre de sommets du graphe
+*/
+int Graphe::getNbSommets()
+{
+   return nbSommets;
+}
+
+
+//NEW
+/*
+ * \fn  void setAllStateFalse()
+ * \brief set l'état de tous les sommets du graphe à false
+ *
+ * \return void
+*/
+void Graphe::setAllStatesFalse()
+{
+   Sommet* courant = listeSommets;
+   for (int i=0; i<nbSommets; i++)
+   {
+      courant->etat = false;
+      courant = courant->suivant;
+   }
+}
+
+//NEW
+/*
+ * \fn  void setState(const std::string& sommet, bool state)
+ * \brief set l'état d'un sommet
+ *
+ * \param[in] sommet le sommet à modifier
+ * \param[in] state le booléen représentat le nouvel état
+ *
+ * \return void
+*/
+void Graphe::setState(const std::string& sommet, bool state)
+{
+   Sommet* courant = listeSommets;
+   while (courant->nom != sommet)
+   {
+      courant = courant->suivant;
+   }
+   courant->etat = state;
+}
+
+//NEW
+/*
+ * \fn  std::vector<std::string> getSuccesseurs(const std::string& origine)
+ * \brief retourne un vector contenant les successeurs d'un sommet
+ *
+ * \param[in] origine le sommet recherché
+ *
+ * \return std::vector<std::string> un vector contenant les noms des sommets successeurs au sommet d'origine
+*/
+std::vector<std::string> Graphe::getSuccesseurs(const std::string& origine)
+{
+   std::vector<std::string> successeurs;
+   Sommet* courant = listeSommets;
+   while (courant->nom != origine)
+   {
+      courant = courant->suivant;
+   }
+   Arc* arcCourant = courant->listeDest;
+   while (arcCourant != 0)
+   {
+      successeurs.push_back(arcCourant->dest->nom);
+      arcCourant = arcCourant->suivDest;
+   }
+   return successeurs;
+}
+
+//NEW
+/*
+ * \fn  bool getState(const std::string& sommet)
+ * \brief retourne l'état d'un sommet
+ *
+ * \param[in] sommet le sommet recherché
+ *
+ * \return bool l'état d'un sommet
+*/
+bool Graphe::getState(const std::string& sommet)
+{
+   Sommet* courant = listeSommets;
+   while (courant->nom != sommet)
+   {
+      courant = courant->suivant;
+   }
+   return courant->etat;
+}
 }//Fin du namespace

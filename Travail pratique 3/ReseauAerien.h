@@ -16,6 +16,7 @@
 #include <climits>
 #include <vector>
 #include <map>
+#include <queue>
 //vous pouvez inclure d'autres librairies de la STL si vous pensez les utiliser
 
 #ifndef _RESEAUAERIEN__H
@@ -25,7 +26,12 @@ namespace TP3
 {
 
 const int infinie = INT_MAX; // Constante que vous pouvez �ventuellement utiliser
-
+//NEW
+struct Predecesseur
+{
+   std::string sommet;
+   std::string pred;
+};
 struct Chemin 
 {
    //listeVilles doit contenir la liste des villes formant le chemin
@@ -159,6 +165,19 @@ public:
    *  \exception logic_error si la valeur de dureeCoutNiveau != 1..3
    */
 	Chemin bellManFord(const std::string& origine,const std::string& destination, int dureeCoutNiveau);
+
+	//NEW
+	   /*
+	    * \fn std::vector<std::string> rechercheCheminLargeur (const std::string& origine, const std::string& destination)
+	    * \brief retourne le chemin trouvé en forme d’un tableau (vector) de chaînes de caractères
+	    *
+	    * \pre Le reseau est valide
+	    * \return un tableau (vector) de string contenant les noms des villes du chemin
+	    *
+	    * \exception logic_error si le départ ou l'arrivée ne fait pas partie du réseau aérien
+	   */
+	   std::vector<std::string> rechercheCheminLargeur (const std::string& origine,
+	   const std::string& destination);
 
 // De plus, vous devez compl�ter ce fichier ReseauAerien.h par la sp�cification 
 // du reste des m�thodes demand�s, voir l'�nonc� de ce travail pratique (4.3 Requ�tes des clients)

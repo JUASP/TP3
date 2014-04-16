@@ -303,4 +303,63 @@ Chemin ReseauAerien::bellManFord(const std::string& origine,const std::string& d
          }// fin switch
    return cheminLePlusCourt;
 }
+
+//NEW
+/*
+* \fn std::vector<std::string> rechercheCheminLargeur (const std::string& origine, const std::string& destination)
+*
+* \param[in] origine: le sommet d'origine
+* \param[in] destination: le sommet de destination
+*
+* \return un tableau (vector) de string contenant les noms des villes du chemin
+*/
+std::vector<std::string> ReseauAerien::rechercheCheminLargeur (const std::string& origine, const std::string& destination)
+{
+
+   std::vector<Predecesseur> predecesseurs;
+
+   if (!(unReseau.sommetExiste(origine)) && !(unReseau.sommetExiste(destination))) throw std::logic_error("rechercheCheminlargeur: Le sommet d'origine et/ou de destination n'existe pas");
+
+   unReseau.setAllStatesFalse();
+   std::queue<std::string> fileEnLargeur;
+
+   unReseau.setState(origine, true);
+   fileEnLargeur.push(origine);
+
+   std::vector<std::string> parcours;
+   while (!fileEnLargeur.empty())
+   {
+      std::string courant = fileEnLargeur.front();
+      fileEnLargeur.pop();
+      std::vector<std::string> vecSuccesseurs = unReseau.getSuccesseurs(courant);
+
+      for (std::vector<std::string>::iterator it = vecSuccesseurs.begin(); it != vecSuccesseurs.end(); ++it)
+      {
+         if (unReseau.getState(*it) != true)
+         {
+            unReseau.setState(*it, true);
+            fileEnLargeur.push(*it);
+            Predecesseur predCourant;
+            predCourant.sommet = *it;
+            predCourant.pred = courant;
+            predecesseurs.push_back(predCourant);
+            if (*it == destination)
+            {
+               parcours.insert(parcours.begin(), destination);
+               std::string recherche = destination;
+               for (std::vector<Predecesseur>::reverse_iterator itPred = predecesseurs.rbegin(); itPred != predecesseurs.rend(); ++itPred)
+               {
+                  if (itPred->sommet.compare(recherche) == 0)
+                  {
+                     parcours.insert(parcours.begin(), itPred->pred);
+                     recherche = itPred->pred;
+                  }
+               }
+               return parcours;
+            }
+         }
+      }
+   }
+   return parcours;
+}
 }//Fin du namespace

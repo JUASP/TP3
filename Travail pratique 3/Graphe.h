@@ -229,6 +229,39 @@ namespace TP3
         */
 		void detruireGraphe();
 
+		//NEW
+		      /*
+		       * \brief retourne le nombre de sommets d'un graphe
+		      */
+		      int getNbSommets();
+
+		      //NEW
+		      /*
+		       * \brief set l'état de tous les sommets du graphe à false
+		       * \post L'état de tous les sommets est à false
+		      */
+		      void setAllStatesFalse();
+
+		      //NEW
+		      /*
+		       * \brief set l'état d'un sommet
+		       * \post l'état du sommet donné est modifié
+		      */
+		      void setState(const std::string& sommet, bool state);
+
+		      //NEW
+		      /*
+		       * \brief retourne l'état d'un sommet
+		      */
+		      bool getState(const std::string& sommet);
+
+		      //NEW
+		      /*
+		       * \brief retourne un vector contenant les successeurs d'un sommet
+		      */
+		      std::vector<std::string> getSuccesseurs(const std::string& origine);
+		      //Vous pouvez ajoutez d'autres méthodes publiques si vous sentez leur nécessité
+
 
 
 		//Vous pouvez ajoutez d'autres méthodes publiques si vous sentez leur nécessité

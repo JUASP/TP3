@@ -97,7 +97,9 @@ bool Graphe::arcExiste(const std::string& sommetUn, const std::string& sommetDeu
 				if (arcCourant->dest->nom == sommetDeux) return true;
 				arcCourant = arcCourant->suivDest;
 			}
+
 		}
+		else courant = courant->suivant;
 	}
 	return false;
 }

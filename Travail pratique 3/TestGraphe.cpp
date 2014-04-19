@@ -1,6 +1,12 @@
 /*
- * TestGraphe.cpp
  *
+ * \file TestGraphe.cpp
+ * \brief Test des methodes de graphe
+ * \author Julien, Felix et Mathieu
+ * \version 0.1
+ * \date 18 mars 2014
+ *
+ *  Travail pratique num�ro 3
  *  Created on: 18 mars 2014
  *      Author: etudiant
  */

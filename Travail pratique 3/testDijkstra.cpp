@@ -1,9 +1,15 @@
 /*
-* TestReseauAerien.cpp
-*
-* Created on: 18 mars 2014
-* Author: etudiant
-*/
+ *
+ * \file testDijkstra.cpp
+ * \brief Test de l'algo Dijkstra
+ * \author Julien, Felix et Mathieu
+ * \version 0.1
+ * \date 18 mars 2014
+ *
+ *  Travail pratique num�ro 3
+ *  Created on: 18 mars 2014
+ *      Author: etudiant
+ */
 #include "ReseauAerien.h"
 #include <iostream>
 #include <ctime>

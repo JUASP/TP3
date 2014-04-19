@@ -64,7 +64,7 @@ ReseauAerien::ReseauAerien(const ReseauAerien &source){
 * \fn ReseauAerien& ReseauAerien::operator=(const ReseauAerien& src)
 * \brief Surcharge de l'op�rateur d'affectation.
 * \pre Il doit y avoir assez de m�moire.
-* \param une référence sur un autre ReseauAerien
+* \param src une référence sur un autre ReseauAerien
 * \post Le r�seau a�rien a un contenu identique � src.
 * \return retourne l'objet ReseauAerien courant
 * \exception bad_alloc S'il n'y a pas assez de m�moire.
@@ -168,6 +168,8 @@ std::vector<ReseauAerien> ReseauAerien::composantesFortConnexes(){
     *  \param leVector notre vecteur de reponse
     *  \param mapVisite outils pour la fonction
     *  \param mapLow outil pour la fonction
+    *  \param stackSommet une pile de sommet
+    *  \param compteur un compteur pour la fonction
     *
     *  \post les params recu en reference seront modifier.
     */
@@ -250,7 +252,7 @@ ReseauAerien ReseauAerien::fermetureReseau(){
 
 
 /**
-* \fn Chemin bellManFord(const std::string& origine,const std::string& destination, int dureeCoutNiveau)
+* \fn Chemin ReseauAerien::bellManFord(const std::string& origine,const std::string& destination, int dureeCoutNiveau)
 *  \brief Retourne le pointeur sur le reseau.
 *
 *  \pre le reseau est valide.

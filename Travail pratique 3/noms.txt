@@ -3,3 +3,10 @@ Felix Brousseau-Tremblay -111 049 601- FEBRT1 - felix.brousseau-tremblay.1@ulava
 Mathieu Cassagnes  -  910239591  - MACAS121 - mathieu.cassagnes.1@ulaval.ca
 
 
+
+
+
+L'algo le plus performant par quelques millisecondes est bien entendu l'algorithme A*. 
+En effet, si l'on commence avec l'intuition que Dijkstra est le plus rapide et que A* l'optimise,
+il est clair que A* donne le resultat le plus performant (mais avec moins de precisions par contre).
+

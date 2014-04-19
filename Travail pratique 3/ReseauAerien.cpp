@@ -137,8 +137,75 @@ std::string * ReseauAerien::GetNomReseau (){
 */
 std::vector<ReseauAerien> ReseauAerien::composantesFortConnexes(){
    std::vector<ReseauAerien> leVector;
+   //ReseauAerien reseauFermeture = fermetureReseau();
+   std::map<std::string,int> mapLow; // pour faire le lien entre le nom du sommet et s'il a ete visite
+   std::vector<std::string> vecteurNomsSommets = unReseau.listerNomsSommets();
+   std::map<std::string,bool> mapVisite; // pour faire le lien entre le nom du sommet et s'il a ete visite
+   std::stack<std::string> stackSommet;
+   int compteur = 0;
 
+   //Boucle d'initialisation
+   for(std::vector<std::string>::iterator it = vecteurNomsSommets.begin(); it < vecteurNomsSommets.end(); it++){
+                     mapVisite[(*it)] = false; // on initalize tout a false. car les visites n'ont pas commencer encore
+                     mapLow[(*it)] = -1; // on donne la valeur -1 a tout par default.
+   }
+   //Boucle d'apelle
+   for(std::vector<std::string>::iterator it = vecteurNomsSommets.begin(); it < vecteurNomsSommets.end(); it++){
+          if(mapVisite[(*it)] == false){
+             dfs((*it), leVector, mapVisite, mapLow, stackSommet, compteur);
+          }
+
+    }
    return leVector;
+}
+
+/**
+    *  \fn void ReseauAerien::dfs(std::string sommetCourant, std::vector<ReseauAerien> &leVector,std::map<std::string,bool> &mapVisite,std::map<std::string,int> &mapLow)
+    *  \brief fonction utilitaire pour l'algo de tarjan.
+    *
+    *  \pre les param sont tous valide.
+    *  \param sommetCourant correspond au sommet courant
+    *  \param leVector notre vecteur de reponse
+    *  \param mapVisite outils pour la fonction
+    *  \param mapLow outil pour la fonction
+    *
+    *  \post les params recu en reference seront modifier.
+    */
+void ReseauAerien::dfs(std::string sommetCourant, std::vector<ReseauAerien> &leVector,std::map<std::string,bool> &mapVisite,std::map<std::string,int> &mapLow, std::stack<std::string> &stackSommet, int &compteur){
+
+   mapLow[sommetCourant] = compteur++;
+   mapVisite[sommetCourant] = true;
+   stackSommet.push(sommetCourant);
+   int min = mapLow[sommetCourant];
+   std::string  villeAdjacenteCourante;
+   std::vector<std::string>::iterator itVilleAdj; // iterateur pour se deplacer dans le vecteur des villes adjacentes
+   std::vector<std::string> vectorSommetsAdjacents = unReseau.listerSommetsAdjacents(sommetCourant);
+   for (itVilleAdj = vectorSommetsAdjacents.begin(); itVilleAdj < vectorSommetsAdjacents.end() ; itVilleAdj++ ) {
+         villeAdjacenteCourante = (*itVilleAdj);
+
+         if(mapVisite[villeAdjacenteCourante] == false){
+               dfs(villeAdjacenteCourante,leVector, mapVisite, mapLow, stackSommet, compteur);
+         }
+         if(mapLow[villeAdjacenteCourante] < min){
+            min = mapLow[villeAdjacenteCourante];
+         }
+
+   }
+   if(min < mapLow[sommetCourant]){
+      mapLow[sommetCourant] = min;
+      return;
+   }
+   ReseauAerien nouveauReseau;
+   std::string tempStack;
+   Coordonnees coordTemp;
+   do{
+      tempStack = stackSommet.top(); // on prend l'element du dessus on le met dans tempStack
+      stackSommet.pop();// on retire l'element du dessus.
+      coordTemp = unReseau.getCoordonnesSommet(tempStack);
+      nouveauReseau.unReseau.ajouterSommet(tempStack,coordTemp.lt,coordTemp.lg);
+      mapLow[tempStack] = unReseau.getNbSommets();
+   }while(tempStack != sommetCourant);
+   leVector.push_back(nouveauReseau);
 }
 
 

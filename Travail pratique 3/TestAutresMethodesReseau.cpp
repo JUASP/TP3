@@ -33,8 +33,18 @@ int main()
    ReseauAerien reseau3(reseau2); // test constructeur de copie
    reseau2 = reseau; // test de la surchage de l'operateur =
    std::cout << reseau2;
+   std:: cout << "debut fermeture" << std::endl;
    ReseauAerien reseauFermer = reseau.fermetureReseau(); // cree la fermeture du reseau
-   std::cout << reseauFermer;
+   //std::cout << reseauFermer;
+   std:: cout << "fin fermeture" << std::endl;
+   std:: cout << "debut compo connexes" << std::endl;
+   std::vector<ReseauAerien> connexeFort = reseauFermer.composantesFortConnexes(); // verif composantes Fort connexes
+   for(std::vector<ReseauAerien>::iterator it = connexeFort.begin(); it < connexeFort.end(); it++){
+      std::cout << "Compo fortemenet connexe" << std::endl;
+      std::cout << (*it) << std::endl; // on affiche tous les reseauAerien
+
+   }
+   std:: cout << "fin compo connexes" << std::endl;
 	if (reseau2.GetUnReseau()->arcExiste("un", "deux")) std::cout << "arc existe" << std::endl;
 	if (reseau.GetUnReseau()->arcExiste("un", "deux")) std::cout << "arc existe" << std::endl;
 	std::vector<std::string> sommets = reseau.GetUnReseau()->listerSommetsAdjacents("un");

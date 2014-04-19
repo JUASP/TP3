@@ -18,6 +18,7 @@
 #include <map>
 #include <stdlib.h>
 #include <queue>
+#include <stack>
 //vous pouvez inclure d'autres librairies de la STL si vous pensez les utiliser
 
 #ifndef _RESEAUAERIEN__H
@@ -239,6 +240,15 @@ public:
 	    *  \post Le reseau peut etre chang�e.
 	    */
 	   std::string * GetNomReseau();
+
+	   /**
+	       *  \brief fonction utilitaire pour l'algo de tarjan.
+	       *
+	       *  \pre les param sont tous valide.
+	       *
+	       *  \post les params recu en reference seront modifier.
+	       */
+	   void dfs(std::string sommetCourant, std::vector<ReseauAerien> &leVector,std::map<std::string,bool> &mapVisite,std::map<std::string,int> &mapLow, std::stack<std::string> &stackSommet, int &compteur);
 
 // De plus, vous devez compl�ter ce fichier ReseauAerien.h par la sp�cification 
 // du reste des m�thodes demand�s, voir l'�nonc� de ce travail pratique (4.3 Requ�tes des clients)

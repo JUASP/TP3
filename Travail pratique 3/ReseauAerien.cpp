@@ -110,6 +110,17 @@ Graphe * ReseauAerien::GetUnReseau (){
 }
 
 
+/**
+*  \fn std::string * ReseauAerien::GetNomReseau ()
+*  \brief Retourne le pointeur sur le reseau.
+*
+*  \pre le reseau est valide.
+*
+*  \post Le reseau peut etre chang�e.
+*/
+std::string * ReseauAerien::GetNomReseau (){
+   return &nomReseau;
+}
 
 
 
@@ -126,8 +137,11 @@ Graphe * ReseauAerien::GetUnReseau (){
 */
 std::vector<ReseauAerien> ReseauAerien::composantesFortConnexes(){
    std::vector<ReseauAerien> leVector;
+
    return leVector;
 }
+
+
 
 
 
@@ -361,5 +375,400 @@ std::vector<std::string> ReseauAerien::rechercheCheminLargeur (const std::string
       }
    }
    return parcours;
+}
+
+/**
+ * \fn std::vector<std::string> ReseauAerien::split(std::string& str, std::string& delim)
+*  \brief Separe un chaine de caractere selon un delimiteur donnee.
+*
+*  \pre la chaine a coupe
+*  \pre le delimiteur selon lequel la chaine sera coupe
+*
+*  \post Retourne un vecteur de chaque nouvelle piece
+*/
+std::vector<std::string> ReseauAerien::split(std::string& str, std::string& delim)
+   {
+         unsigned start = 0;
+         unsigned end;
+         std::vector<std::string> v;
+
+         while( (end = str.find(delim, start)) != std::string::npos )
+         {
+               v.push_back(str.substr(start, end-start));
+               start = end + delim.length();
+         }
+         v.push_back(str.substr(start));
+         return v;
+   }
+
+
+/**
+ * \fn Chemin ReseauAerien::algorithmeAstar(const std::string& origine, const std::string& destination, bool dureeCout)
+*  \brief Retourne le chemin le plus court selon l'algorithme A*.
+*
+*  \pre le reseau est valide.
+*  \pre le point d'origine existe.
+*  \pre le point d'arrivee existe.
+*
+*  \post Retourne le chemin le plus cours.
+*  \post Retourne un booleen selon un succes ou un echec
+*/
+Chemin ReseauAerien::algorithmeAstar(const std::string& origine, const std::string& destination, bool dureeCout)
+{
+   Chemin cheminFinal;
+      std::vector<std::string> nomsSommet = unReseau.listerNomsSommets();
+      std::map<std::string, float> costs;
+      std::map<std::string, std::string> precedent;
+      std::priority_queue<std::string> priorityQueue;
+      float cost;
+
+      //Verifie que le point de depart et la destination sont valide
+      if(!unReseau.sommetExiste(origine) || !unReseau.sommetExiste(destination))
+      {
+         throw std::logic_error("Le point d'origine ou d'aller n'existe pas");
+      }
+
+      for(std::vector<std::string>::iterator it = nomsSommet.begin(); it < nomsSommet.end(); it++)
+      {
+         if((*it) == origine)
+         {
+            costs[(*it)] = 0;
+            precedent[(*it)] = "";
+            continue;
+         }
+         costs[(*it)] = infinie;
+      }
+
+      priorityQueue.push(origine);
+
+      while(!priorityQueue.empty())
+      {
+         std::string currentCity = priorityQueue.top();
+         priorityQueue.pop();
+
+         for(unsigned int i = 0; i < unReseau.listerSommetsAdjacents(currentCity).size(); i++)
+         {
+            std::string target = unReseau.listerSommetsAdjacents(currentCity)[i];
+
+            if(unReseau.arcExiste(currentCity, unReseau.listerSommetsAdjacents(currentCity)[i]))
+            {
+               if(dureeCout == true)
+               {
+                  cost = unReseau.getPonderationsArc(currentCity, unReseau.listerSommetsAdjacents(currentCity)[i]).cout + unReseau.getDistanceEucledienne(currentCity, unReseau.listerSommetsAdjacents(currentCity)[i]);
+                  std::cout << "Cout : " << cost << std::endl;
+               }
+               else cost = unReseau.getPonderationsArc(currentCity, unReseau.listerSommetsAdjacents(currentCity)[i]).duree + unReseau.getDistanceEucledienne(currentCity, unReseau.listerSommetsAdjacents(currentCity)[i]);
+            }
+            else continue;
+
+            float distanceThroughCurrentCity = costs.at(currentCity) + cost;
+
+            std::cout << "Cout vers ville courante : " << distanceThroughCurrentCity << std::endl;
+
+            if(distanceThroughCurrentCity < costs.at(target))
+            {
+               costs.at(target) = distanceThroughCurrentCity;
+               precedent.insert(std::pair<std::string, std::string>(target, currentCity));
+               std::cout << "Destination : " << target << std::endl;
+               std::cout << "Ville courante : " << currentCity << std::endl;
+               priorityQueue.push(target);
+            }
+         }
+      }
+
+      cheminFinal.reussi = true;
+      cheminFinal.coutTotal = costs[destination];
+      cheminFinal.dureeTotale = costs[destination];
+      cheminFinal.listeVilles.push_back(destination);
+      std::string courant = precedent[destination];
+      cheminFinal.listeVilles.push_back(courant);
+
+      while(courant != origine)
+      {
+         courant = precedent[courant];
+         cheminFinal.listeVilles.push_back(courant);
+      }
+
+      return cheminFinal;
+}
+
+/**
+* \fn Chemin ReseauAerien::rechercheCheminDijkstra(const std::string& origine, const std::string& destination, bool dureeCout)
+*  \brief Retourne le chemin le plus court selon l'algorithme de Dijkstra.
+*
+*  \pre le reseau est valide.
+*  \pre le point d'origine existe.
+*  \pre le point d'arrivee existe.
+*
+*  \post Retourne le chemin le plus cours.
+*  \post Retourne un booleen selon un succes ou un echec
+*/
+Chemin ReseauAerien::rechercheCheminDijkstra(const std::string& origine, const std::string& destination, bool dureeCout)
+{
+   Chemin cheminFinal;
+   std::vector<std::string> nomsSommet = unReseau.listerNomsSommets();
+   std::map<std::string, float> costs;
+   std::map<std::string, std::string> precedent;
+   std::priority_queue<std::string> priorityQueue;
+   float cost;
+
+   //Verifie que le point de depart et la destination sont valide
+   if(!unReseau.sommetExiste(origine) || !unReseau.sommetExiste(destination))
+   {
+      throw std::logic_error("Le point d'origine ou d'aller n'existe pas");
+   }
+
+   for(std::vector<std::string>::iterator it = nomsSommet.begin(); it < nomsSommet.end(); it++)
+   {
+      if((*it) == origine)
+      {
+         costs[(*it)] = 0;
+         precedent[(*it)] = "";
+         continue;
+      }
+      costs[(*it)] = infinie;
+   }
+
+   priorityQueue.push(origine);
+
+   while(!priorityQueue.empty())
+   {
+      std::string currentCity = priorityQueue.top();
+      priorityQueue.pop();
+
+      for(unsigned int i = 0; i < unReseau.listerSommetsAdjacents(currentCity).size(); i++)
+      {
+         std::string target = unReseau.listerSommetsAdjacents(currentCity)[i];
+
+         if(unReseau.arcExiste(currentCity, unReseau.listerSommetsAdjacents(currentCity)[i]))
+         {
+            if(dureeCout == true)
+            {
+               cost = unReseau.getPonderationsArc(currentCity, unReseau.listerSommetsAdjacents(currentCity)[i]).cout;
+               std::cout << "Cout : " << cost << std::endl;
+            }
+            else cost = unReseau.getPonderationsArc(currentCity, unReseau.listerSommetsAdjacents(currentCity)[i]).duree;
+         }
+         else continue;
+
+         float distanceThroughCurrentCity = costs.at(currentCity) + cost;
+
+         std::cout << "Cout vers ville courante : " << distanceThroughCurrentCity << std::endl;
+
+         if(distanceThroughCurrentCity < costs.at(target))
+         {
+            costs.at(target) = distanceThroughCurrentCity;
+            precedent.insert(std::pair<std::string, std::string>(target, currentCity));
+            std::cout << "Destination : " << target << std::endl;
+            std::cout << "Ville courante : " << currentCity << std::endl;
+            priorityQueue.push(target);
+         }
+      }
+   }
+
+   cheminFinal.reussi = true;
+   cheminFinal.coutTotal = costs[destination];
+   cheminFinal.dureeTotale = costs[destination];
+   cheminFinal.listeVilles.push_back(destination);
+   std::string courant = precedent[destination];
+   cheminFinal.listeVilles.push_back(courant);
+
+   while(courant != origine)
+   {
+      courant = precedent[courant];
+      cheminFinal.listeVilles.push_back(courant);
+   }
+
+   return cheminFinal;
+}
+
+
+/**
+ * \fn void ReseauAerien::sauvegarderReseau(std::ofstream& SortieFichier) const
+ * \brief Sauvegarder un r�seau dans un fichier texte (voir format du fichier dans l'�nonc� du Tp).
+ * \pre SortieFichier est ouvert correctement.
+ * \post SortieFichier n'est pas ferm� par la fonction.
+ * \post Si les pr�conditions sont respect�es, les donn�es du r�seau sont sauvegard�es dans le fichier.
+ * \exception logic_error si SortieFichier n'est pas ouvert correctement.
+ */
+void ReseauAerien::sauvegarderReseau(std::ofstream& SortieFichier) const
+{
+
+   if(SortieFichier)
+   {
+      SortieFichier << "Reseau Aerien: " << nomReseau << std::endl;
+      SortieFichier << unReseau.nombreSommets() << "villes" << std::endl;
+      SortieFichier << unReseau.nombreArcs() << "trajets" << std::endl;
+
+      SortieFichier << "Liste des villes: " << std::endl;
+
+      std::vector<std::string>::iterator villeCourante;
+      std::vector<std::string>::iterator trajetCourant;
+      std::string nomVilleCourante,villeAdjCourante;
+      std::string nomProchaineDestination;
+
+      for(villeCourante = unReseau.listerNomsSommets().begin(); villeCourante < unReseau.listerNomsSommets().end(); villeCourante++)
+      {
+         nomVilleCourante = (*villeCourante);
+         SortieFichier << nomVilleCourante << std::endl;
+         SortieFichier << unReseau.getCoordonnesSommet(nomVilleCourante).lg << " " << unReseau.getCoordonnesSommet(nomVilleCourante).lt << std::endl;
+      }
+
+      SortieFichier << "Liste des trajets: " << std::endl;
+
+      for(trajetCourant = unReseau.listerNomsSommets().begin(); trajetCourant < unReseau.listerNomsSommets().end(); trajetCourant++)
+      {
+
+         nomVilleCourante = (*trajetCourant);
+         std::cout << nomVilleCourante  << std::endl;
+         for(unsigned int i = 0; i < unReseau.listerSommetsAdjacents(nomVilleCourante).size(); i++)
+         {
+            std::cout <<" Ville adjacentes in for : " <<unReseau.listerSommetsAdjacents(nomVilleCourante)[i] << std::endl;
+            villeAdjCourante = unReseau.listerSommetsAdjacents(nomVilleCourante)[i];
+            if(unReseau.arcExiste(nomVilleCourante,villeAdjCourante))
+            {
+               std::cout <<" YA UN ARC"  << std::endl;
+               //std::cout << nomVilleCourante << unReseau.listerSommetsAdjacents(nomVilleCourante)[i] << std::endl;
+
+               SortieFichier << nomVilleCourante << std::endl;
+               SortieFichier << unReseau.listerSommetsAdjacents(nomVilleCourante)[i] << std::endl;
+               SortieFichier << unReseau.getPonderationsArc(nomVilleCourante, unReseau.listerSommetsAdjacents(nomVilleCourante)[i]).duree << " "
+                     << unReseau.getPonderationsArc(nomVilleCourante, unReseau.listerSommetsAdjacents(nomVilleCourante)[i]).cout << " "
+                     << unReseau.getPonderationsArc(nomVilleCourante, unReseau.listerSommetsAdjacents(nomVilleCourante)[i]).ns << std::endl;
+            }
+         }
+      }
+   }
+   else throw std::invalid_argument("saugardeReseau : le fichier texte n'est pas correctement ouvert");
+}
+
+
+/**
+ * \fn void ReseauAerien::chargerReseau(std::ifstream & fichierEntree)
+* \brief Charger un r�seau � partir d'un fichier texte en entr�e (voir format du fichier dans l'�nonc� du Tp).
+* \pre Il y a assez de m�moire pour charger toutes les villes et les trajets du r�seau.
+* \pre fichierEntree est ouvert corectement.
+* \post fichierEntree n'est pas ferm� par la fonction.
+* \post Si les pr�conditions sont respect�es, les donn�es du r�seau contenu dans le fichier en entr�e sont organis�es dans un graphe en m�moire.
+* \exception bad_alloc si pas assez de m�moire pour contenir toute la liste du fichier.
+* \exception logic_error si fichierEntree n'est pas ouvert correctement.
+*/
+void ReseauAerien::chargerReseau(std::ifstream & fichierEntree)
+{
+   if(fichierEntree.peek() == std::ifstream::traits_type::eof())
+   {
+      throw std::logic_error("chargerSE:logic_error le fichier texte est vide!");
+   }
+   if(fichierEntree)
+   {
+      std::string ligne;
+      int indice = 0;
+
+      //Var utilitaire pour contenir les infos temporairement
+      std::string ville1;
+      std::string ville2;
+      std::vector<std::string> splitString;
+      int passage = 1;
+
+      while (getline(fichierEntree, ligne))
+      {
+
+         if(ligne == "Reseau Aerien: Air Canada")
+         {
+            indice = 0;
+            continue;
+         }// fin if
+         if(ligne == "Liste des villes:"){
+            indice = 1;
+            continue;
+         }//fin if
+         if (ligne == "Liste des trajets:"){
+            indice = 2;
+            continue;
+         }// fin if
+
+         std::string delim ;
+
+         switch(indice)
+         {
+            case 0:
+               //Ajout du nom du reseau
+               if(!isalpha(ligne[0]))
+               {
+                  continue;
+               }
+               else
+               {
+                  delim = ":";
+                  splitString = ReseauAerien::split(ligne, delim);
+                  std::string tempString = splitString[1];
+                  nomReseau = tempString;
+               }
+               break;
+
+            case 1:
+               //test le premier charactere de la chaine pour voir si cest un nombre ou une lettre
+               if(isalpha(ligne[0]))
+               {
+                  ville1 = ligne;
+               }
+               else
+               {
+                  delim = " ";
+                  splitString = ReseauAerien::split(ligne, delim);
+                  std::vector<float> longEtLat;
+
+                  for(unsigned i = 0; i < splitString.size(); i++){
+                        float temp = atof(splitString[i].c_str());
+                        longEtLat.push_back(temp);
+                     }
+
+                  unReseau.ajouterSommet(ville1, longEtLat[0], longEtLat[1]);
+               }
+               break;
+            case 2:
+               //test le premier charactere de la chaine pour voir si cest un nombre ou une lettre
+               if(isalpha(ligne[0]))
+               {
+                  if(passage == 1)
+                  {
+                    // std::cout << "Ville 1" << std::endl;
+                     //std::cout << ville1 << std::endl;
+                     ville1 = ligne;
+                     passage = 0;
+                  }
+                  else
+                  {
+                    // std::cout << "Ville 2" << std::endl;
+                     //std::cout << ville2 << std::endl;
+                     ville2 = ligne;
+                     passage = 1;
+                  }
+               }
+               else
+               {
+                  delim = " ";
+                  splitString = ReseauAerien::split(ligne, delim);
+                  std::vector<float> longEtLat;
+
+                  for(unsigned i = 0; i < splitString.size(); i++){
+                     float temp = atof(splitString[i].c_str());
+                     longEtLat.push_back(temp);
+                  }
+                  std::cout << "Ville 1 " << ville1 << "Ville 2: "<< ville2 <<  std::endl;
+                  if(!(unReseau.arcExiste(ville1,ville2))){
+                  unReseau.ajouterArc(ville1, ville2, longEtLat[0], longEtLat[1], longEtLat[2]);
+               }
+               }
+               break;
+         }// fin switch
+
+      }// fin while
+   }//fin if
+   else
+   {
+      throw std::invalid_argument("chargerSE:le fichier texte n'est pas correctement ouvert");
+   }
+
 }
 }//Fin du namespace

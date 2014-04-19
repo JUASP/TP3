@@ -16,6 +16,7 @@
 #include <climits>
 #include <vector>
 #include <map>
+#include <stdlib.h>
 #include <queue>
 //vous pouvez inclure d'autres librairies de la STL si vous pensez les utiliser
 
@@ -178,6 +179,66 @@ public:
 	   */
 	   std::vector<std::string> rechercheCheminLargeur (const std::string& origine,
 	   const std::string& destination);
+
+	   /**
+	    *  \brief Separe une chaine de caractere en jetons selon un delimiteur donne.
+	    *
+	    *  \pre une chaine de caractere.
+	    *  \pre un delimiteur en string
+	    *
+	    *  \post un vecteur de jeton.
+	    */
+	   static std::vector<std::string> split(std::string& str, std::string& delim);
+
+	   /**
+	    *  \brief Change le nom du reseau.
+	    *
+	    *  \pre le reseau est valide.
+	    *
+	    *  \post Le reseau peut etre chang�e.
+	    */
+	   void setNomReseau(std::string string)
+	   {
+	      nomReseau = string;
+	   }
+
+	   /************************ Methode rechercheCheminDijkstra a ajouter! ******************************/
+
+	   /**
+	   *  \brief Retourne le chemin le plus court selon l'algorithme de Dijkstra.
+	   *
+	   *  \pre le reseau est valide.
+	   *  \pre le point d'origine existe.
+	   *  \pre le point d'arrivee existe.
+	   *
+	   *  \post Retourne le chemin le plus cours.
+	   *  \post Retourne un booleen selon un succes ou un echec
+	   */
+	   Chemin rechercheCheminDijkstra(const std::string& origine, const std::string& destination, bool dureeCout);
+
+
+	   /************************ Methode algorithmeAstar a ajouter! ******************************/
+
+	   /**
+	   *  \brief Retourne le chemin le plus court selon l'algorithme A*.
+	   *
+	   *  \pre le reseau est valide.
+	   *  \pre le point d'origine existe.
+	   *  \pre le point d'arrivee existe.
+	   *
+	   *  \post Retourne le chemin le plus cours.
+	   *  \post Retourne un booleen selon un succes ou un echec
+	   */
+	   Chemin algorithmeAstar(const std::string& origine, const std::string& destination, bool dureeCout);
+
+	   /**
+	    *  \brief Retourne le nom du reseau reseau.
+	    *
+	    *  \pre le reseau est valide.
+	    *
+	    *  \post Le reseau peut etre chang�e.
+	    */
+	   std::string * GetNomReseau();
 
 // De plus, vous devez compl�ter ce fichier ReseauAerien.h par la sp�cification 
 // du reste des m�thodes demand�s, voir l'�nonc� de ce travail pratique (4.3 Requ�tes des clients)

@@ -12,7 +12,7 @@ int main()
 {
    ReseauAerien reseau;
 	Chemin cheminAvec1,cheminAvec2,cheminAvec3;
-
+	clock_t clock_bellManFord;
 
 	reseau.GetUnReseau()->ajouterSommet("un", 3.10, 4.10);
 
@@ -54,7 +54,8 @@ int main()
       }
    }else std::cout << "le chemin 3 n'a pas réussi"<< std::endl ;
 
-
+   clock_bellManFord = clock();
+     std::cout << "\nTemps de calcul: " << (long)(clock_bellManFord) << " millisecondes\n\n";
    /*
    ReseauAerien reseau2;
    ReseauAerien reseau3(reseau2); // test constructeur de copie
